@@ -9,11 +9,12 @@
 
 library(shiny)
 
+
 # Define UI for application that draws a histogram
 fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("LMR data"),
 
     # Sidebar with a slider input for number of bins
     sidebarLayout(
@@ -22,12 +23,19 @@ fluidPage(
                         "Number of bins:",
                         min = 1,
                         max = 50,
-                        value = 30)
+                        value = 30),
+            # select one or more years, including multiple years
+            selectizeInput("cyr", "Select a year", 
+                           choices = unique(lmr_data$cyr), 
+                           selected = unique(lmr_data$cyr),
+                           multiple = TRUE
+                           )
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("distPlot")
+            plotOutput("distPlot"),
+            plotlyOutput("sales_line")
         )
     )
 )

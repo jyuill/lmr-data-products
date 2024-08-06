@@ -10,7 +10,9 @@ library(dotenv)
 # APORT=3..6  
 
 ## Load the .env file
-readRenviron(".env")
+#readRenviron("../.env")
+#dotenv::load_dot_env("../.env")
+
 
 ## Load the environment variables
 endpt <- Sys.getenv("ENDPT")
@@ -25,4 +27,7 @@ con_aws <- dbConnect(RMariaDB::MariaDB(),
 # main query - all the data
 lmr_data <- dbGetQuery(con_aws, "SELECT * FROM bcbg.tblLDB_lmr lmr
                            LEFT JOIN bcbg.tblLDB_quarter qtr ON lmr.fy_qtr=qtr.fy_qtr;")
+# convert from integer64 to numeric
+lmr_data$netsales <- as.numeric(lmr_data$netsales)
+lmr_data$litres <- as.numeric(lmr_data$litres)
 dbDisconnect(con_aws)
