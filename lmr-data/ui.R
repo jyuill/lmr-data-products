@@ -8,6 +8,7 @@
 #
 
 library(shiny)
+library(shinyWidgets)
 
 
 # Define UI for application that draws a histogram
@@ -19,23 +20,45 @@ fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30),
             # select one or more years, including multiple years
-            selectizeInput("cyr", "Select a year", 
-                           choices = unique(lmr_data$cyr), 
-                           selected = unique(lmr_data$cyr),
-                           multiple = TRUE
-                           )
-        ),
+            # different options tried
+            # selector is good but takes up space, not so intuitive/elegant
+            # selectizeInput(inputId="cyr_select", "Select a year", 
+            #                choices = unique(lmr_data$cyr), 
+            #                selected = unique(lmr_data$cyr),
+            #                multiple = TRUE
+            #                ),
+            # checkbox works but screen real estate
+            # checkboxGroupInput(inputId = "cyr_check", "Select a year", 
+            #                    choices = unique(lmr_data$cyr), 
+            #                    selected = unique(lmr_data$cyr),
+            #                    inline = FALSE
+            #                    ),
+            # picker for max flexibility/usability
+            pickerInput(
+              inputId = "cyr_picker",
+              label = "Select Year(s):",
+              choices = unique(lmr_data$cyr),
+              selected = unique(lmr_data$cyr),
+              multiple = TRUE,
+              options = list(
+                `actions-box` = TRUE,
+                `selected-text-format` = "count > 3",
+                `count-selected-text` = "{0} years selected",
+                `live-search` = TRUE
+              )
+            ),
+            # filter for categories
+            selectizeInput(inputId="cat_select", "Select a year", 
+                            choices = unique(lmr_data$cat_type), 
+                            selected = unique(lmr_data$cat_type),
+                            multiple = TRUE
+                            ),
+        ), # end sidebarPanel
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("distPlot"),
             plotlyOutput("sales_line")
-        )
-    )
-)
+        ) # end mainPanel
+    ) # end sidebarLayout
+) # end shinyUI

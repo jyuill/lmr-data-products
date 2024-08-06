@@ -19,29 +19,20 @@ source('query.R')
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
-
-    output$distPlot <- renderPlot({
-
-        # generate bins based on input$bins from ui.R
-        #x    <- faithful[, 2]
-        x <- lmr_data %>% group_by(cyr) %>% summarize(netsales = sum(netsales)) %>% 
-          select(netsales)
-        x <- x[[1]]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-
-    })
-    
+  # Filter the dataset based on the selected categories
+  filtered_data <- reactive({
+    lmr_data %>% filter(cat_type %in% input$cat_select)
+  })
+  
     output$sales_line <- renderPlotly({
-        
-        x <- lmr_data %>% group_by(cyr) %>% summarize(netsales = sum(netsales)) 
+        # filter for desired data
+        #x <- lmr_data %>% filter(cat_type %in% input$cat_select) %>%
+        #        group_by(cyr) %>% summarize(netsales = sum(netsales)) 
+        x <- filtered_data() 
+        x <- x %>% group_by(cyr) %>% summarize(netsales = sum(netsales))
 
         # draw the line chart for sales by year
-        p <- x %>% filter(input$cyr %in% cyr) %>% 
+        p <- x %>% filter(cyr %in% input$cyr_picker) %>% 
           ggplot(aes(x = cyr, y = netsales)) +
           geom_line() +
           scale_y_continuous(labels = scales::dollar) +
@@ -50,3 +41,5 @@ function(input, output, session) {
     })
 
 }
+
+
