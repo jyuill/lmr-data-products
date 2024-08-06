@@ -49,11 +49,11 @@ fluidPage(
               )
             ),
             # filter for categories
-            selectizeInput(inputId="cat_select", "Select a year", 
-                            choices = unique(lmr_data$cat_type), 
-                            selected = unique(lmr_data$cat_type),
-                            multiple = TRUE
-                            ),
+            checkboxGroupInput(inputId = "cat_check", "Select a year", 
+                                choices = unique(lmr_data$cat_type), 
+                                selected = unique(lmr_data$cat_type),
+                                inline = FALSE
+                                ),
         ), # end sidebarPanel
 
         # Show a plot of the generated distribution

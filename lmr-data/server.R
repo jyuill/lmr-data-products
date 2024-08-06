@@ -21,7 +21,7 @@ source('query.R')
 function(input, output, session) {
   # Filter the dataset based on the selected categories
   filtered_data <- reactive({
-    lmr_data %>% filter(cat_type %in% input$cat_select)
+    lmr_data %>% filter(cat_type %in% input$cat_check)
   })
   
     output$sales_line <- renderPlotly({
