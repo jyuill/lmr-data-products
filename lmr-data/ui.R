@@ -48,6 +48,12 @@ fluidPage(
                 `live-search` = TRUE
               )
             ),
+            # filter for quarters
+            checkboxGroupInput(inputId = "qtr_check", "Select a quarter", 
+                                choices = unique(lmr_data$qtr), 
+                                selected = unique(lmr_data$qtr),
+                                inline = FALSE
+                                ),
             # filter for categories
             checkboxGroupInput(inputId = "cat_check", "Select a year", 
                                 choices = unique(lmr_data$cat_type), 
@@ -58,7 +64,8 @@ fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotlyOutput("sales_line")
+            plotlyOutput("sales_line"),
+            plotlyOutput("sales_yoy")
         ) # end mainPanel
     ) # end sidebarLayout
 ) # end shinyUI
