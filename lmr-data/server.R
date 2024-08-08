@@ -15,7 +15,7 @@ library(plotly)
 library(here)
 
 # set plot theme
-theme_set(theme_minimal())
+theme_set(theme_classic())
 
 # fetch data from online database into lmr_data
 source('query.R')
@@ -47,19 +47,28 @@ function(input, output, session) {
         p <- x %>%
           ggplot(aes(x = cyr, y = netsales)) +
           geom_col() +
-          scale_y_continuous(labels = label_currency(scale = 1e-9, suffix = "B")) +
-          labs(title="Net $ Sales by Year")
+          scale_y_continuous(labels = label_currency(scale = 1e-9, suffix = "B"),
+                             expand = expansion(mult=c(0,0.05))) +
+          labs(title="Net $ Sales by Year", x="", y="")+
+          theme(axis.ticks.x = element_blank())
         ggplotly(p)
     })
     # plot for year-over-year change in sales
     output$sales_yoy <- renderPlotly({
       x <- filtered_data() %>% group_by(cyr) %>% summarize(netsales = sum(netsales)) %>%
         mutate(yoy = (netsales - lag(netsales))/lag(netsales))
-      p <- x %>%
+      max_y <- max(x$yoy, na.rm = TRUE)
+      min_y <- min(x$yoy, na.rm = TRUE)
+      max_val <- max(abs(min_y), abs(max_y))
+      p <- x %>% 
         ggplot(aes(x = cyr, y = yoy)) +
         geom_col() +
-        scale_y_continuous(labels = scales::percent) +
-        labs(title='% Change in Net $ Sales')
+        geom_hline(yintercept = 0, linetype = "solid", color = "black") +
+        scale_y_continuous(labels = scales::percent,
+                           expand = expansion(mult=c(0,0.05)),
+                           limits = c(0 - max_val, max_val)) +
+        labs(title='% Change in Net $ Sales', x="", y="")+
+        theme(axis.ticks.x = element_blank())
     })
 
 }

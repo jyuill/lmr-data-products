@@ -14,13 +14,15 @@ library(plotly)
 
 # Define UI for application that draws a histogram
 fluidPage(
-
+    # Link to the external CSS file
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
     # Application title
     titlePanel("LMR data"),
 
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
+          class = "sidebar",
             # select one or more years, including multiple years
             # different options tried
             # selector is good but takes up space, not so intuitive/elegant
@@ -65,6 +67,7 @@ fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
+          class = "main",
           fluidRow(
             column(width = 6,
                    plotlyOutput("sales_line")
