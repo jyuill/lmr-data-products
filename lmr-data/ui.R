@@ -56,7 +56,7 @@ fluidPage(
                                 inline = FALSE
                                 ),
             # filter for categories
-            checkboxGroupInput(inputId = "cat_check", "Select a year", 
+            checkboxGroupInput(inputId = "cat_check", "Select a Category", 
                                 choices = unique(lmr_data$cat_type), 
                                 selected = unique(lmr_data$cat_type),
                                 inline = FALSE

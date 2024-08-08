@@ -14,6 +14,9 @@ library(scales)
 library(plotly)
 library(here)
 
+# set plot theme
+theme_set(theme_minimal())
+
 # fetch data from online database into lmr_data
 source('query.R')
 #lmr_data <- lmr_data %>% arrange(cyr, cqtr, cat_type)
@@ -44,8 +47,8 @@ function(input, output, session) {
         p <- x %>%
           ggplot(aes(x = cyr, y = netsales)) +
           geom_col() +
-          scale_y_continuous(labels = scales::dollar) +
-          theme_minimal()
+          scale_y_continuous(labels = label_currency(scale = 1e-9, suffix = "B")) +
+          labs(title="Net $ Sales by Year")
         ggplotly(p)
     })
     # plot for year-over-year change in sales
@@ -56,7 +59,7 @@ function(input, output, session) {
         ggplot(aes(x = cyr, y = yoy)) +
         geom_col() +
         scale_y_continuous(labels = scales::percent) +
-        theme_minimal()
+        labs(title='% Change in Net $ Sales')
     })
 
 }
