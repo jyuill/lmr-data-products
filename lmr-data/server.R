@@ -12,16 +12,23 @@ library(tidyverse)
 library(lubridate)
 library(scales)
 library(plotly)
+library(here)
 
 # fetch data from online database into lmr_data
 source('query.R')
+#lmr_data <- lmr_data %>% arrange(cyr, cqtr, cat_type)
+# drop incomplete calendar year at start
+tbl_yq <- table(lmr_data$cyr, lmr_data$cqtr)
+if(any(tbl_yq[1,] == 0)) {
+  lmr_data <- lmr_data %>% filter(cyr != rownames(tbl_yq)[1])
+}
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
   # Filter the dataset based on the selected categories
   filtered_data <- reactive({
     lmr_data %>% filter(cyr %in% input$cyr_picker) %>%
-      filter(qtr %in% input$qtr_check) %>%
+      filter(cqtr %in% input$qtr_check) %>%
       filter(cat_type %in% input$cat_check)
   })
     # plot for sales by year

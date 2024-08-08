@@ -13,7 +13,6 @@ library(dotenv)
 #readRenviron("../.env")
 #dotenv::load_dot_env("../.env")
 
-
 ## Load the environment variables
 endpt <- Sys.getenv("ENDPT")
 apwd <- Sys.getenv("APWD")
@@ -24,10 +23,19 @@ con_aws <- dbConnect(RMariaDB::MariaDB(),
                      user='admin',
                      password=apwd,
                      port=aport)
-# main query - all the data
+# test q
+t_data <- dbGetQuery(con_aws, "SELECT * FROM bcbg.tblLDB_lmr LIMIT 10")
+q_data <- dbGetQuery(con_aws, "SELECT * FROM bcbg.tblLDB_quarter LIMIT 10")
+# main query - all the data -> raw data joined with date dimensions
 lmr_data <- dbGetQuery(con_aws, "SELECT * FROM bcbg.tblLDB_lmr lmr
-                           LEFT JOIN bcbg.tblLDB_quarter qtr ON lmr.fy_qtr=qtr.fy_qtr;")
-# convert from integer64 to numeric
+                           RIGHT JOIN bcbg.tblLDB_quarter qtr ON lmr.fy_qtr = qtr.fy_qtr;")
+# close connection
+dbDisconnect(con_aws)
+
+# cleanup: convert from integer64 to numeric, etc
 lmr_data$netsales <- as.numeric(lmr_data$netsales)
 lmr_data$litres <- as.numeric(lmr_data$litres)
-dbDisconnect(con_aws)
+lmr_data$cqtr <- as.factor(lmr_data$cqtr)
+lmr_data$cyr <- as.factor(lmr_data$cyr)
+# get rid of extraneous col (could do this by specifying all the cols in the query but this is easy hack)
+lmr_data <- lmr_data %>% select(-c(fy_qtr..8))

@@ -9,7 +9,8 @@
 
 library(shiny)
 library(shinyWidgets)
-
+library(tidyverse)
+library(plotly)
 
 # Define UI for application that draws a histogram
 fluidPage(
@@ -50,8 +51,8 @@ fluidPage(
             ),
             # filter for quarters
             checkboxGroupInput(inputId = "qtr_check", "Select a quarter", 
-                                choices = unique(lmr_data$qtr), 
-                                selected = unique(lmr_data$qtr),
+                                choices = sort(unique(lmr_data$cqtr)), 
+                                selected = unique(lmr_data$cqtr),
                                 inline = FALSE
                                 ),
             # filter for categories
@@ -64,8 +65,14 @@ fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotlyOutput("sales_line"),
-            plotlyOutput("sales_yoy")
+          fluidRow(
+            column(width = 6,
+                   plotlyOutput("sales_line")
+            ),
+            column(width = 6,
+                   plotlyOutput("sales_yoy")
+            )
+          ) # end fluidRow
         ) # end mainPanel
     ) # end sidebarLayout
 ) # end shinyUI
