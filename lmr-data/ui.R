@@ -70,12 +70,36 @@ fluidPage(
           class = "main",
           fluidRow(
             column(width = 6,
-                   plotlyOutput("sales_line")
+                   plotlyOutput("sales_yr")
             ),
             column(width = 6,
-                   plotlyOutput("sales_yoy")
+                   plotlyOutput("sales_qtr")
             )
-          ) # end fluidRow
+          ), # end fluidRow 1
+          fluidRow(
+            column(width = 6,
+                   plotlyOutput("sales_yoy", height = "200px")
+            ),
+            column(width = 6,
+                   plotlyOutput("sales_qoq", height = "200px")
+          )
+          ), # end fluidRow 2
+          fluidRow(
+            column(width = 6,
+                   plotlyOutput("sales_yr_cat")
+            ),
+            column(width = 6,
+                   plotlyOutput("sales_qtr_cat")
+          )
+          ), # end fluidRow 3
+          fluidRow(
+            column(width = 6,
+                   plotlyOutput("sales_yoy_cat", height = "500px")
+            ),
+            column(width = 6,
+                   plotlyOutput("sales_qoq_cat", height = "500px")
+          )
+          ), # end fluidRow 4
         ) # end mainPanel
     ) # end sidebarLayout
 ) # end shinyUI

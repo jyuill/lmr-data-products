@@ -35,6 +35,7 @@ dbDisconnect(con_aws)
 # cleanup: convert from integer64 to numeric, etc
 lmr_data$netsales <- as.numeric(lmr_data$netsales)
 lmr_data$litres <- as.numeric(lmr_data$litres)
+lmr_data$cat_type <- as.factor(lmr_data$cat_type)
 lmr_data$cqtr <- as.factor(lmr_data$cqtr)
 lmr_data$cyr <- as.factor(lmr_data$cyr)
 # get rid of extraneous col (could do this by specifying all the cols in the query but this is easy hack)
